@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [FrontendController::class, 'index'])->name('home');
-Route::post('search', [FrontendController::class, 'processSearch'])->name('search');
+Route::post('fetch-historical-data', [FrontendController::class, 'processSearch'])->name('search');
