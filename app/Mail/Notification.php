@@ -12,23 +12,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class Notification extends Mailable
+class Notification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public $message, public $attachment)
-    {
-        $this->getCompanyName($message->symbol);
-    }
-
-    private function getCompanyName($symbol)
-    {
-        $company = CompanySymbol::where('symbol', $symbol)->first();
-
-        $this->subject = $company->name;
+    public function __construct(
+        public array $message,
+        public $attachment,
+        public $companyName
+    ) {
     }
 
     /**
@@ -38,7 +33,7 @@ class Notification extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@xm.com', 'XM.com'),
-            subject: $this->subject,
+            subject: $this->companyName,
         );
     }
 
@@ -50,9 +45,9 @@ class Notification extends Mailable
         return new Content(
             view: 'emails.index',
             with: [
-                'company_name' => $this->subject,
-                'start_date' => $this->message->start_date,
-                'end_date' => $this->message->end_date
+                'company_name' => $this->companyName,
+                'start_date' => $this->message['start_date'],
+                'end_date' => $this->message['end_date']
             ]
         );
     }

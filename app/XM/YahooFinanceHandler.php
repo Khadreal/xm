@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class YahooFinanceHandler
 {
-    private string $baseEndpoint = 'https://yh-finance.p.rapidapi.com/stock/v3/get-historical-data';
-    private string $key = 'b5615839e7mshba66d6cb8a08d10p14ac48jsn3dc0fb85d738';
-
     public function getHistoricalData($data)
     {
         $startDate = date('Y-m-d', strtotime($data['start_date']));
@@ -23,9 +20,9 @@ class YahooFinanceHandler
 
         try{
             $req = Http::withHeaders([
-                'X-RapidAPI-Key' => $this->key,
+                'X-RapidAPI-Key' => env('YH_API_KEY'),
                 'X-RapidAPI-Host' => 'yh-finance.p.rapidapi.com'
-            ])->get($this->baseEndpoint, $args);
+            ])->get(env('YH_ENDPOINT'), $args);
         } catch (\Exception $e) {
             throw new BadRequestException('Invalid request');
         }
