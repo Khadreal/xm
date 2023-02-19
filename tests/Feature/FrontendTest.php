@@ -105,14 +105,13 @@ class FrontendTest extends TestCase
             'name' => 'Company name should be here'
         ]);
 
-        $request = new \Illuminate\Http\Request();
-        $request->request->add([
+        $request = [
             'symbol' => 'ABTL',
             'end_date' => '2022-10-01',
             'start_date' => '2022-09-01',
-        ]);
+        ];
 
-        $mailable = new Notification($request->all(), 'faker-filepath.csv', 'Company name should be here');
+        $mailable = new Notification($request, 'faker-filepath.csv', 'Company name should be here');
 
         $mailable->assertFrom('noreply@xm.com');
         $mailable->assertHasSubject('Company name should be here');
